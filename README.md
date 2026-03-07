@@ -1,11 +1,11 @@
 # Movie Explorer
 
 This project is a Streamlit web application that allows users to explore movies using filters such as title, genre, language, rating, and release year.  
-The data comes from Google BigQuery, and additional movie details (poster, cast, overview) are retrieved from the TMDB API.  
+Movie metadata is stored in Google BigQuery, and additional details (poster, cast, overview) are retrieved from the TMDB API.  
 The application is containerized with Docker and deployed on Google Cloud Run.
 
 ## Live Application
-link : https://movie-app-714848336619.europe-west6.run.app/
+https://movie-app-714848336619.europe-west6.run.app/
 
 ## How to Run Locally
 Install dependencies:
@@ -21,6 +21,7 @@ Build the image:
 Run the container:
     docker run -p 8080:8080 movie-app
 
+## Additional Notes
+This assignment was completed with the assistance of AI (free version of Copilot).
 
-## Note
-This assignment was completed with the assistance of Copilot. 
+The dropdown menu supports both selection and typing: even though suggestions are displayed, users can type inside the dropdown to dynamically filter the list and quickly find a movie.

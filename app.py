@@ -16,9 +16,10 @@ if "selected_title" not in st.session_state:
 if "last_results" not in st.session_state:
     st.session_state["last_results"] = None
 
-# Initialize BigQuery client
+# BigQuery client used for all database queries
 client = bigquery.Client()
 
+# Mapping of ISO language codes to human-readable names
 LANGUAGE_NAMES = {
     "aa": "Afar", "ab": "Abkhazian", "ae": "Avestan", "af": "Afrikaans", "ak": "Akan",
     "am": "Amharic", "an": "Aragonese", "ar": "Arabic", "as": "Assamese", "av": "Avaric",
@@ -62,6 +63,8 @@ LANGUAGE_NAMES = {
 
 # ---------- QUERY FUNCTIONS ----------
 
+# Each function below performs a specific BigQuery lookup
+# and returns the results as a pandas DataFrame.
 def search_movies_by_release_year(min_year):
     sql = """
         SELECT 
@@ -164,7 +167,6 @@ def search_titles_startswith(prefix):
         FROM `assignment1-489216.movies_dataset.movies`
         WHERE LOWER(title) LIKE LOWER(CONCAT(@prefix, '%'))
         ORDER BY title
-        LIMIT 500
     """
     job_config = bigquery.QueryJobConfig(
         query_parameters=[
@@ -180,7 +182,6 @@ def search_titles_contains(prefix):
         FROM `assignment1-489216.movies_dataset.movies`
         WHERE LOWER(title) LIKE LOWER(CONCAT('%', @prefix, '%'))
         ORDER BY title
-        LIMIT 500
     """
     job_config = bigquery.QueryJobConfig(
         query_parameters=[
@@ -190,8 +191,10 @@ def search_titles_contains(prefix):
     return client.query(sql, job_config=job_config).to_dataframe()
 
 
-# ---------- CACHED TMDB WRAPPER ----------
-
+# ---------- TMDB CACHING LAYER ----------
+# Cache TMDB API responses to avoid repeated network calls.
+# This improves performance and reduces API usage.
+#(suggest by IA)
 @st.cache_data(show_spinner=False)
 def cached_get_movie_details(tmdb_id):
     return get_movie_details(tmdb_id)
@@ -272,13 +275,14 @@ def movie_selector_block(df, label="Select a movie:", selectbox_key="movie_selec
             st.session_state["selected_title"] = selected_title
         display_movie_details(tmdb_id)
 
-# ---------- UI (Home acts as unified Research) ----------
+
+# ---------- MAIN UI LAYOUT ----------
 
 st.title("Welcome to Movie Explorer")
-st.subheader("Research")
-st.write("Activate the filters you want, then click Run Research.")
+st.subheader("Search")
+st.write("Activate the filters you want, then click on Search.")
 
-# --- Deep Research filters (Home) ---
+
 title_query = st.text_input("Search by movie title (optional):", key="deep_title")
 
 use_language = st.checkbox("Filter by language", key="deep_use_language")
@@ -315,7 +319,11 @@ if use_rating:
 if use_year:
     min_year = st.number_input("Show movies released after:", 1890, 2026, 2019, key="deep_min_year")
 
-run_clicked = st.button("Run Research", key="deep_run_btn")
+run_clicked = st.button("Search", key="deep_run_btn")
+
+# ---------- QUERY EXECUTION ----------
+# Dynamically builds a SQL query depending on which filters are active.
+
 
 if run_clicked:
     sql = """
@@ -393,6 +401,9 @@ if run_clicked:
     else:
         st.session_state["last_results"] = df.to_dict(orient="records")
         st.success(f"Found {len(df)} matching movies.")
+
+# ---------- RESULTS DISPLAY ----------
+# If results exist, show movie selector and TMDB details.
 
 if st.session_state.get("last_results"):
     df_last = pd.DataFrame(st.session_state["last_results"])
