@@ -1,0 +1,8 @@
+streamlit
+google-cloud-bigquery
+pandas
+requests
+python-dotenv
+db-dtypes
+google-cloud-core
+google-auth
