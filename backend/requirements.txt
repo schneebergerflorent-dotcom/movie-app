@@ -1,0 +1,7 @@
+flask
+google-cloud-bigquery
+pandas
+requests
+gunicorn
+db-dtypes
+elasticsearch

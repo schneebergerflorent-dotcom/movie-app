@@ -6,3 +6,4 @@ python-dotenv
 db-dtypes
 google-cloud-core
 google-auth
+streamlit-searchbox
