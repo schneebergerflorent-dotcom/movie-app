@@ -1,0 +1,18 @@
+# --- Secrets / tokens ---
+*.env
+.env*
+*token*
+*key*
+tmdb_token.txt
+elastic_key.txt
+
+# --- Python cache ---
+__pycache__/
+*.pyc
+
+# --- Virtual environments ---
+.venv/
+venv/
+
+# --- OS junk ---
+.DS_Store
