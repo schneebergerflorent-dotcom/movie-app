@@ -1,4 +1,4 @@
-# Movie Recommendation App — Assignment Part 2
+# Movie Recommendation App
 
 ## Live Demo (Internet URL)
 You can test the application here:  
