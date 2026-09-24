@@ -389,7 +389,7 @@ if chosen:
 
 query = st.text_input("Title contains (optional):", key="search_query")
 
-# LANGUAGE NAMES (kept)
+# LANGUAGE NAMES
 LANGUAGE_NAMES = {
     "aa": "Afar", "ab": "Abkhazian", "ae": "Avestan", "af": "Afrikaans", "ak": "Akan",
     "am": "Amharic", "an": "Aragonese", "ar": "Arabic", "as": "Assamese", "av": "Avaric",
